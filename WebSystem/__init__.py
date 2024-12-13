@@ -6,6 +6,6 @@ def create_app():
     from .index import index_bp
     from .api import api_bp
     app.register_blueprint(index_bp)
-    app.register_blueprint(api_bp, url_prefix="/api")
+    app.register_blueprint(api_bp)
 
     return app

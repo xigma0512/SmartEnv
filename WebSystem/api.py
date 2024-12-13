@@ -8,13 +8,13 @@ api_bp = Blueprint("api", __name__)
 def test():
     return True
 
-@api_bp.route("/indoor/record", methods=["POST"])
+@api_bp.route("/indoorAPI/record", methods=["POST"])
 def indoor_record():
     status, error = record(request.get_json())
     
     if error == None: return jsonify({'status': status, "Message": "Record success"})
     return jsonify({'status': status, "Message": str(error)})
     
-@api_bp.route("/indoor/response")
+@api_bp.route("/indoorAPI/response")
 def indoor_response():
     return response()
