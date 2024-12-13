@@ -1,0 +1,8 @@
+{
+    "indoorManageSystem": {
+        "standard_temp": 26.0,
+        "deviation_temp": 1.5,
+        "standard_moist": 50,
+        "deviation_moist": 10
+    }
+}
