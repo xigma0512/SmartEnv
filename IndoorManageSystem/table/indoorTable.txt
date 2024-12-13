@@ -1,0 +1,1 @@
+{"temp": [20.0], "moist": [51], "averageTemp": 20, "averageMoist": 50}
