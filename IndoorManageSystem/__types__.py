@@ -1,4 +1,4 @@
-from typing import TypedDict, Literal
+from typing import TypedDict, Literal, Dict
 
 class DataType(TypedDict):
     mode: Literal["indoor", "outdoor"]
@@ -6,8 +6,13 @@ class DataType(TypedDict):
     temp: float
     moist: float
 
-class TableType(TypedDict):
+class Table(TypedDict):
     temp: list
     moist: list
-    averageTemp: float
-    averageMoist: float
+    
+class AverageRecord(TypedDict):
+    hour: int
+    temp: float
+    moist: float
+
+type History = Dict[str, list[AverageRecord]]
