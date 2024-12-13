@@ -1,30 +1,35 @@
 from datetime import datetime
-from IndoorManageSystem.__types__ import DataType, TableType
-from fileReader import FileReader
-
-import os
-import json
-
-currentDir = os.path.dirname(__file__)
-
+from IndoorManageSystem.__types__ import DataType, Table, History
+from data.fileManager import FileManager, dataPath
+    
 def record(data: DataType):
     try:
         dt = datetime.fromtimestamp(data['timestamp'])
-        tablePath = currentDir + "/table/" + data['mode'] + 'Table.txt'
+        to_date = dt.strftime("%Y-%m-%d")
+        
+        tablePath = dataPath + "/indoor/table.json"
+        historyPath = dataPath + "/indoor/history.json"
+        
+        table: Table = FileManager.readJson(tablePath)
+        history: History = FileManager.readJson(historyPath)
 
-        table: TableType = FileReader.read(tablePath, True)
+        lastUpdate = history[to_date][-1]
+        if dt.hour != lastUpdate['hour']:
+            history[to_date].append({
+                "hour": dt.hour,
+                "temp": sum(table['temp']) / len(table['temp']),
+                "moist": sum(table['moist']) / len(table['moist'])
+            })
+            FileManager.updateJson(historyPath, history)
+    
+            table['temp'].clear()
+            table['moist'].clear()
+            FileManager.updateJson(tablePath, table)
 
-        if dt.minute != 0:
-            table['temp'].append(data['temp'])
-            table['moist'].append(data['moist'])
-            FileReader.update(tablePath, json.dumps(table))
-            return True, None
-
-        table['averageTemp'] = sum(table['temp']) / len(table['temp']) if table['temp'] else 0
-        table['averageMoist'] = sum(table['moist']) / len(table['moist']) if table['moist'] else 0
-        table['temp'].clear()
-        table['moist'].clear()
-        FileReader.update(tablePath, json.dumps(table))
+        table['temp'].append(data['temp'])
+        table['moist'].append(data['moist'])
+        FileManager.updateJson(tablePath, table)
         return True, None
-    except Exception as e:
-        return False, e
+    
+    except Exception as exception:
+        return False, exception
