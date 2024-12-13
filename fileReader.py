@@ -2,9 +2,10 @@ import json
 
 class FileReader:
     
-    def read(path: str):
+    def read(path: str, isjson = False):
         with open(path, 'r') as f:
             ret = f.read()
+        if isjson: return json.loads(ret)
         return ret
 
     def readJson(path: str):
