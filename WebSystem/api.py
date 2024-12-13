@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from IndoorManageSystem.record import record
-from IndoorManageSystem.response import response
+from IndoorManageSystem.record import record as indoor_record
+from IndoorManageSystem.response import response as indoor_response
 
 api_bp = Blueprint("api", __name__)
 
@@ -9,12 +9,12 @@ def test():
     return True
 
 @api_bp.route("/indoorAPI/record", methods=["POST"])
-def indoor_record():
-    status, error = record(request.get_json())
+def indoorAPI_record():
+    status, error = indoor_record(request.get_json())
     
     if error == None: return jsonify({'status': status, "Message": "Record success"})
     return jsonify({'status': status, "Message": str(error)})
     
-@api_bp.route("/indoorAPI/response")
-def indoor_response():
-    return response()
+@api_bp.route("/indoorAPI/realtime_data")
+def indoorAPI_realtime_data():
+    return indoor_response()
