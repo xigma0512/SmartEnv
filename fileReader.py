@@ -2,10 +2,9 @@ import json
 
 class FileReader:
     
-    def read(path: str, isjson = False):
-        with open(path, 'r') as f:
-            ret = f.read()
-        if isjson: return json.loads(ret)
+    def read(path: str):
+        with open(path, 'r') as file:
+            ret = file.read()
         return ret
 
     def readJson(path: str):
@@ -14,5 +13,9 @@ class FileReader:
         return ret
     
     def update(path: str, content: str):
-        with open(path, "w") as f:
-            f.write(content)
+        with open(path, "w") as file:
+            file.write(content)
+            
+    def updateJson(path: str, content: str):
+        with open(path, "w") as jfile:
+            json.dump(content, jfile)
