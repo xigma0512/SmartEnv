@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from IndoorManageSystem.__types__ import DataType, Table, History
 from data.fileManager import FileManager, dataPath
     
@@ -13,7 +13,12 @@ def record(data: DataType):
         table: Table = FileManager.readJson(tablePath)
         history: History = FileManager.readJson(historyPath)
 
-        lastUpdate = history[to_date][-1]
+        if to_date not in history: 
+            history[to_date] = []
+            lastUpdate = history[dt - timedelta(days=1)][-1]
+        else:
+            lastUpdate = history[to_date][-1]
+            
         if dt.hour != lastUpdate['hour']:
             history[to_date].append({
                 "hour": dt.hour,
