@@ -27,7 +27,7 @@ def outdoorAPI_record():
     status, error = outdoor_record(request.get_json())
     
     if error == None: return jsonify({'status': status, "Message": "Record success"})
-    return jsonify({'status': status, "Message": str(error)}),500
+    return jsonify({'status': status, "Message": str(error)}),500 ## 要給錯誤代碼 sensor看代碼確認有沒有OK
     
 @api_bp.route("/outdoorAPI/realtime_data")
 def outdoorAPI_realtime_data():
