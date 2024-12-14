@@ -1,7 +1,7 @@
 from data.fileManager import FileManager, config, dataPath
 from IndoorManageSystem.__types__ import Table, History
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def isInRange(value: float, standard: float, deviation: float):
     return abs(value - standard) <= deviation
@@ -48,9 +48,12 @@ def moistChecker():
 def response():
     
     retMessage = {
-        'control': [False for i in range(5)],
         'realTimeData': [0,0],
-        'latestHistory': None    
+        'control': [False for _ in range(5)],
+        'history': {
+            'temp': {"labels": [],"values": []},
+            'moist': {"labels": [],"values": []},
+        }
     }
     
     tempResult = tempChecker()
@@ -58,12 +61,25 @@ def response():
     if tempResult != 0: retMessage['control'][tempResult - 1] = True
     if moistResult != 0: retMessage['control'][moistResult - 1] = True
     
-    history: History = FileManager.readJson(dataPath + "/indoor/history.json")
     table: Table = FileManager.readJson(dataPath + "/indoor/table.json")
-    
-    to_date = datetime.now().strftime("%Y-%m-%d")
-    
     retMessage['realTimeData'] = [table['temp'][-1], table['moist'][-1]]
-    retMessage['latestHistory'] = history[to_date][-1] 
     
+    history: History = FileManager.readJson(dataPath + "/indoor/history.json")
+    
+    for i in range(24):
+        
+        to_date = [(datetime.now() - timedelta(hours=i)).strftime("%Y-%m-%d")]
+        hour = [(datetime.now() - timedelta(hours=i)).strftime("%H")]
+        
+        if to_date not in history: continue
+        
+        for data in history[to_date]:
+            if data['hour'] != hour: continue
+
+            retMessage['history']['temp']['labels'].append(hour)
+            retMessage['history']['temp']['values'].append(data['temp'])
+            
+            retMessage['history']['moist']['labels'].append(hour)
+            retMessage['history']['moist']['values'].append(data['moist'])
+                
     return retMessage
