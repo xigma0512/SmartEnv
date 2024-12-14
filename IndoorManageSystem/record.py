@@ -18,10 +18,10 @@ def record(data: DataType):
             lastUpdate = history[dt - timedelta(days=1)][-1]
         else:
             lastUpdate = history[to_date][-1]
-            
-        if dt.hour != lastUpdate['hour']:
+        
+        if dt.hour != lastUpdate['hour'] + 1:
             history[to_date].append({
-                "hour": dt.hour,
+                "hour": (dt.hour - 1) % 24,
                 "temp": sum(table['temp']) / len(table['temp']),
                 "moist": sum(table['moist']) / len(table['moist'])
             })
