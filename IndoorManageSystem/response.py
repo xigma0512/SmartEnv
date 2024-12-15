@@ -37,7 +37,7 @@ def moistChecker():
     conf = config['indoorManageSystem']
     
     indoorAM = indoorHistory[to_date][-1]['moist']
-    standardMoist, deviationMoist = conf['standard_temp'], conf['deviation_temp']
+    standardMoist, deviationMoist = conf['standard_moist'], conf['deviation_moist']
 
     if isInRange(indoorAM, standardMoist, deviationMoist): return 0
     
@@ -49,37 +49,31 @@ def response():
     
     retMessage = {
         'realTimeData': [0,0],
-        'control': [False for _ in range(5)],
+        'control': [tempChecker(), moistChecker()],
         'history': {
-            'temp': {"labels": [],"values": []},
-            'moist': {"labels": [],"values": []},
+            'labels': [], # hours
+            'temp': [], # values
+            'moist': [], # values
         }
     }
-    
-    tempResult = tempChecker()
-    moistResult = moistChecker()
-    if tempResult != 0: retMessage['control'][tempResult - 1] = True
-    if moistResult != 0: retMessage['control'][moistResult - 1] = True
     
     table: Table = FileManager.readJson(dataPath + "/indoor/table.json")
     retMessage['realTimeData'] = [table['temp'][-1], table['moist'][-1]]
     
     history: History = FileManager.readJson(dataPath + "/indoor/history.json")
     
-    for i in range(24):
+    for i in range(24, 0, -1):
         
-        to_date = [(datetime.now() - timedelta(hours=i)).strftime("%Y-%m-%d")]
-        hour = [(datetime.now() - timedelta(hours=i)).strftime("%H")]
-        
+        to_date = (datetime.now() - timedelta(hours=i)).strftime("%Y-%m-%d")
+        hour = int((datetime.now() - timedelta(hours=i)).strftime("%H"))
+
         if to_date not in history: continue
         
         for data in history[to_date]:
             if data['hour'] != hour: continue
 
-            retMessage['history']['temp']['labels'].append(hour)
-            retMessage['history']['temp']['values'].append(data['temp'])
-            
-            retMessage['history']['moist']['labels'].append(hour)
-            retMessage['history']['moist']['values'].append(data['moist'])
-                
+            retMessage['history']['labels'].append(hour)
+            retMessage['history']['temp'].append(data['temp'])
+            retMessage['history']['moist'].append(data['moist'])
+    
     return retMessage
