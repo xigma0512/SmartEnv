@@ -17,8 +17,8 @@ def indoorAPI_record():
     if error == None: return jsonify({'status': status, "Message": "Record success"})
     return jsonify({'status': status, "Message": str(error)}),500
     
-@api_bp.route("/indoorAPI/realtime_data")
-def indoorAPI_realtime_data():
+@api_bp.route("/indoorAPI/data")
+def indoorAPI_data():
     return indoor_response()
 
 
@@ -29,6 +29,6 @@ def outdoorAPI_record():
     if error == None: return jsonify({'status': status, "Message": "Record success"})
     return jsonify({'status': status, "Message": str(error)}),500 ## 要給錯誤代碼 sensor看代碼確認有沒有OK
     
-@api_bp.route("/outdoorAPI/realtime_data")
-def outdoorAPI_realtime_data():
+@api_bp.route("/outdoorAPI/data")
+def outdoorAPI_data():
     return outdoor_response()

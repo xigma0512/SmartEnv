@@ -1,14 +1,14 @@
 from data.fileManager import FileManager, config, dataPath
 from OutdoorManageSystem.__types__ import Table, History
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def isInRange(value: float, standard: float, deviation: float):
     return abs(value - standard) <= deviation
 
 # return [0: 什麼都不做, 1: 開窗, 2: 開冷氣, 3: 開暖氣, 4: Error]
 def tempChecker():
-    
+    return None
     to_date = datetime.now().strftime("%Y-%m-%d")
     
     indoorHistory: History = FileManager.readJson(dataPath + "/indoor/history.json")
@@ -30,7 +30,7 @@ def tempChecker():
 
 # return [0: 什麼都不做, 1: 開啟除濕機, 2: 開啟加濕器]
 def moistChecker():
-    
+    return None
     to_date = datetime.now().strftime("%Y-%m-%d")
     
     indoorHistory: History = FileManager.readJson(dataPath + "/indoor/history.json")
@@ -48,22 +48,34 @@ def moistChecker():
 def response():
     
     retMessage = {
-        'control': [False for i in range(5)],
-        'realTimeData': [0,0],
-        'latestHistory': None    
+        'realTimeData': [0,0,0],
+        #'control': [tempChecker(), moistChecker()],
+        'history': {
+            'labels': [], # hours
+            'temp': [], # values
+            'moist': [], # values
+            'PM25': [] # values
+        }   
     }
+
+    table: Table = FileManager.readJson(dataPath + "/outdoor/table.json")
+    retMessage['realTimeData'] = [table['temp'][-1], table['moist'][-1], table['PM25'][-1]]
     
-    tempResult = tempChecker()
-    moistResult = moistChecker()
-    if tempResult != 0: retMessage['control'][tempResult - 1] = True
-    if moistResult != 0: retMessage['control'][moistResult - 1] = True
+    history: History = FileManager.readJson(dataPath + "/outdoor/history.json")
     
-    history: History = FileManager.readJson(dataPath + "/indoor/history.json")
-    table: Table = FileManager.readJson(dataPath + "/indoor/table.json")
+    for i in range(24, 0, -1):
+        
+        to_date = (datetime.now() - timedelta(hours=i)).strftime("%Y-%m-%d")
+        hour = int((datetime.now() - timedelta(hours=i)).strftime("%H"))
+
+        if to_date not in history: continue
+        
+        for data in history[to_date]:
+            if data['hour'] != hour: continue
+
+            retMessage['history']['labels'].append(hour)
+            retMessage['history']['temp'].append(data['temp'])
+            retMessage['history']['moist'].append(data['moist'])
+            retMessage['history']['PM25'].append(data['PM25'])
     
-    to_date = datetime.now().strftime("%Y-%m-%d")
-    
-    retMessage['realTimeData'] = [table['temp'][-1], table['moist'][-1]]
-    retMessage['latestHistory'] = history[to_date][-1] 
-    
-    return None #retMessage
+    return retMessage

@@ -1,0 +1,13 @@
+.indoor-chart-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 500px;
+}
+
+.outdoor-chart-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 380px;
+}
