@@ -30,7 +30,7 @@ function createChart(history) {
 
     const pmDataset = {
         label: 'PM2.5',
-        data: history['pm2.5'],
+        data: history['PM2.5'],
         borderColor: 'rgb(38, 96, 255)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderWidth: 2
