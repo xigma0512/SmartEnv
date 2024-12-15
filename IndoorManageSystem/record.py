@@ -6,6 +6,7 @@ def record(data: DataType):
     try:
         dt = datetime.fromtimestamp(data['timestamp'])
         to_date = dt.strftime("%Y-%m-%d")
+        yesterday_date = (dt - timedelta(days=1)).strftime("%Y-%m-%d")
         
         tablePath = dataPath + "/indoor/table.json"
         historyPath = dataPath + "/indoor/history.json"
@@ -15,7 +16,7 @@ def record(data: DataType):
 
         if to_date not in history: 
             history[to_date] = []
-            lastUpdate = history[dt - timedelta(days=1)][-1]
+            lastUpdate = history[yesterday_date][-1]
         else:
             lastUpdate = history[to_date][-1]
         
