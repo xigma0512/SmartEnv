@@ -2,12 +2,12 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 500px;
+    height: 400px;
 }
 
 .outdoor-chart-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 380px;
+    height: 300px;
 }

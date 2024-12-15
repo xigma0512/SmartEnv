@@ -1,5 +1,5 @@
 // 使用 fetch 從後端 API 獲取數據
-fetch('/indoorAPI/data')
+fetch('indoorAPI/data')
     .then(response => response.json())
     .then(data => {
         document.getElementById("indoor_current_temp").textContent = data.realTimeData[0];
