@@ -23,13 +23,13 @@
 
     <h1>室外數據</h1>
     <p>溫度 >> <span id="outdoor_current_temp">--</span> °C </p>
-    <p>濕度 >> <span id="outdoot_current_moist">--</span> % </p>
+    <p>濕度 >> <span id="outdoor_current_moist">--</span> % </p>
     <p>PM2.5濃度 >> <span id="outdoor_current_pm25">--</span> μg/m3</p>
     <h2>過去一周</h2>
     <div class="outdoor-chart-container">
         <canvas id="outdoor_temp_chart"></canvas>
         <canvas id="outdoor_moist_chart"></canvas>
-        <canvas id="outdoor_pm2.5_chart"></canvas>
+        <canvas id="outdoor_pm25_chart"></canvas>
     </div>
 
     <script src="{{ url_for('static', filename='js/indoorProcess.js') }}"></script>

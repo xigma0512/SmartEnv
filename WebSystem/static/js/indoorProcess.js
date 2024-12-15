@@ -5,11 +5,11 @@ fetch('/indoorAPI/data')
         document.getElementById("indoor_current_temp").textContent = data.realTimeData[0];
         document.getElementById("indoor_current_moist").textContent = data.realTimeData[1];
         document.getElementById("indoor_suggestion").textContent = getControl(data.control);
-        createChart(data.history)
+        indoor_createChart(data.history)
     })
     .catch(error => console.error('Error fetching data:', error));
 
-function getControl(control) {
+const getControl = (control) => {
     let ret = 0
     switch (control[0]) {
         case 0: ret = "無"; break;
@@ -26,39 +26,23 @@ function getControl(control) {
     return ret
 }
 
-function createChart(history) {
-
-    const tempDatasets = {
-        label: '溫度',
-        data: history.temp,
-        borderColor: 'rgb(0, 134, 11)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderWidth: 2
-    }
-
-    const moistDatasets = {
-        label: '濕度',
-        data: history.moist,
-        borderColor: 'rgb(38, 96, 255)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderWidth: 2
-    }
+const indoor_createChart = (history) => {
 
     new Chart(
         document.getElementById('indoor_temp_chart').getContext('2d'), {
         type: 'line',
         data: {
             labels: history.labels,
-            datasets: [tempDatasets]
+            datasets: [{
+                label: '溫度',
+                data: history.temp,
+                borderColor: 'rgb(0, 134, 11)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2
+            }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                }
-            },
             scales: {
                 x: { title: { display: true, text: '時間(小時)' } },
                 y: { title: { display: true, text: '溫度(°C)' } }
@@ -71,20 +55,21 @@ function createChart(history) {
         type: 'line',
         data: {
             labels: history.labels,
-            datasets: [moistDatasets]
+            datasets: [{
+                label: '濕度',
+                data: history.moist,
+                borderColor: 'rgb(38, 96, 255)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2
+            }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                }
-            },
             scales: {
                 x: { title: { display: true, text: '時間(小時)' } },
                 y: { title: { display: true, text: '濕度(%)' } }
             }
         }
     });
+
 }

@@ -5,53 +5,29 @@ fetch('/outdoorAPI/data')
         document.getElementById("outdoor_current_temp").textContent = data.realTimeData[0];
         document.getElementById("outdoor_current_moist").textContent = data.realTimeData[1];
         document.getElementById("outdoor_current_pm25").textContent = data.realTimeData[2];
-        createChart(data.history)
+
+        outdoor_createChart(data.history)
     })
     .catch(error => console.error('Error fetching data:', error));
 
 
-function createChart(history) {
-
-    const tempDatasets = {
-        label: '溫度',
-        data: history.temp,
-        borderColor: 'rgb(0, 134, 11)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderWidth: 2
-    }
-
-    const moistDatasets = {
-        label: '濕度',
-        data: history.moist,
-        borderColor: 'rgb(38, 96, 255)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderWidth: 2
-    }
-
-    const pmDataset = {
-        label: 'PM2.5',
-        data: history['PM2.5'],
-        borderColor: 'rgb(38, 96, 255)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderWidth: 2
-    }
-
+const outdoor_createChart = (history) => {
 
     new Chart(
         document.getElementById('outdoor_temp_chart').getContext('2d'), {
         type: 'line',
         data: {
             labels: history.labels,
-            datasets: [tempDatasets]
+            datasets: [{
+                label: '溫度',
+                data: history.temp,
+                borderColor: 'rgb(0, 134, 11)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2
+            }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                }
-            },
             scales: {
                 x: { title: { display: true, text: '時間(小時)' } },
                 y: { title: { display: true, text: '溫度(°C)' } }
@@ -64,16 +40,16 @@ function createChart(history) {
         type: 'line',
         data: {
             labels: history.labels,
-            datasets: [moistDatasets]
+            datasets: [{
+                label: '濕度',
+                data: history.moist,
+                borderColor: 'rgb(38, 96, 255)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2
+            }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                }
-            },
             scales: {
                 x: { title: { display: true, text: '時間(小時)' } },
                 y: { title: { display: true, text: '濕度(%)' } }
@@ -82,20 +58,20 @@ function createChart(history) {
     });
 
     new Chart(
-        document.getElementById('outdoor_pm2.5_chart').getContext('2d'), {
+        document.getElementById('outdoor_pm25_chart').getContext('2d'), {
         type: 'line',
         data: {
             labels: history.labels,
-            datasets: [pmDataset]
+            datasets: [{
+                label: 'PM2.5',
+                data: history.PM25,
+                borderColor: 'rgb(38, 96, 255)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2
+            }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                }
-            },
             scales: {
                 x: { title: { display: true, text: '時間(小時)' } },
                 y: { title: { display: true, text: '濃度(μg/m3)' } }
