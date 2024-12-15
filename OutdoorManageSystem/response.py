@@ -48,7 +48,7 @@ def moistChecker():
 def response():
     
     retMessage = {
-        'realTimeData': [0,0],
+        'realTimeData': [0,0,0],
         #'control': [tempChecker(), moistChecker()],
         'history': {
             'labels': [], # hours
