@@ -19,7 +19,10 @@ def record(data: DataType):
             lastUpdate = history[yesterday_date][-1]
             to_date = yesterday_date
         else:
-            lastUpdate = history[to_date][-1]
+            if history[to_date] == []:
+                lastUpdate = {'hour': -1}
+            else:
+                lastUpdate = history[to_date][-1]
 
         if dt.hour != lastUpdate['hour'] + 1:
             history[to_date].append({
