@@ -17,6 +17,7 @@ def record(data: DataType):
         if to_date not in history:
             history[to_date] = []
             lastUpdate = history[yesterday_date][-1]
+            to_date = yesterday_date
         else:
             lastUpdate = history[to_date][-1]
 
